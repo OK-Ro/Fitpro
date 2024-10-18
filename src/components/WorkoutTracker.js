@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   MapPin,
   Play,
@@ -65,10 +65,9 @@ const WorkoutTracker = () => {
   const [workouts, setWorkouts] = useState([]);
   const [workoutHistory, setWorkoutHistory] = useState([]);
   const [route, setRoute] = useState([]);
-  const [mapCenter, setMapCenter] = useState([51.505, -0.09]);
+
   const mapRef = useRef();
   const [selectedWorkout, setSelectedWorkout] = useState(null);
-  const modalMapRef = useRef();
 
   const [elevation, setElevation] = useState(0);
   const [temperature, setTemperature] = useState(20);
@@ -85,18 +84,7 @@ const WorkoutTracker = () => {
     { name: "Hiking", icon: <Mountain size={24} />, color: "bg-orange-500" },
   ];
 
-  useEffect(() => {
-    let interval;
-    if (isRunning) {
-      interval = setInterval(() => {
-        setTimer((prevTimer) => prevTimer + 1);
-        updateWorkoutStats();
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [isRunning]);
-
-  const updateWorkoutStats = () => {
+  const updateWorkoutStats = useCallback(() => {
     setDistance((prevDistance) => prevDistance + Math.random() * 0.01);
     setCalories((prevCalories) => prevCalories + Math.random() * 0.1);
     setHeartRate((prevHR) => Math.floor(prevHR + (Math.random() * 2 - 1)));
@@ -123,7 +111,18 @@ const WorkoutTracker = () => {
     setElevation((prev) => prev + (Math.random() * 2 - 1)); // Simulating elevation changes
     setTemperature((prev) => prev + (Math.random() * 0.5 - 0.25)); // Simulating temperature changes
     setAverageSpeed((distance / (timer / 3600)).toFixed(2)); // Calculate average speed in km/h
-  };
+  }, [activeWorkout, distance, timer, heartRate, pace, calories]);
+
+  useEffect(() => {
+    let interval;
+    if (isRunning) {
+      interval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer + 1);
+        updateWorkoutStats();
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isRunning, updateWorkoutStats]);
 
   useEffect(() => {
     if (route.length > 1 && mapRef.current) {

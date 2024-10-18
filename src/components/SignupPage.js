@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 
 import { User, Lock, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
