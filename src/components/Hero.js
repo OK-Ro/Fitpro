@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { FaRunning, FaHeart, FaBolt } from "react-icons/fa";
 
 const Button = ({ children, className, size, variant }) => {
@@ -32,10 +33,19 @@ const Hero = () => {
               plans tailored just for you.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="group">
-                Get Started
-              </Button>
-              <Button size="lg" variant="outline">
+              <Link to="/signup">
+                <Button
+                  size="lg"
+                  className="group shadow-lg transform transition-transform duration-300 hover:scale-105"
+                >
+                  Get Started
+                </Button>
+              </Link>
+              <Button
+                size="lg"
+                variant="outline"
+                className="shadow-lg transform transition-transform duration-300 hover:scale-105"
+              >
                 Learn More
               </Button>
             </div>
